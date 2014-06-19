@@ -29,6 +29,7 @@ oauth_client.clients
 Requirements
 ----------
 Ruby 1.9+ (compatible with Ruby 2.1.1)
+
 HTTParty gem
 
 Note: I only tested these requirements as much as I needed to (not for all functionalities), so you might encounter bugs here and there. But, if the community can make an effort to build this, I'm sure you can make an effort to test that this works for you as well, and even submit fixes wherever possible.
