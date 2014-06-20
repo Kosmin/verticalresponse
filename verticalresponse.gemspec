@@ -25,6 +25,5 @@ Gem::Specification.new do |spec|
     lib/verticalresponse.rb
   '
   spec.require_paths = ["lib"]
-  #spec.homepage    = 'http://rubygems.org/gems/hola'
   spec.license     = 'GPLv3'
 end
