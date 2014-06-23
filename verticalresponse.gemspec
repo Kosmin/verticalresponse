@@ -1,11 +1,11 @@
 Gem::Specification.new do |spec|
   spec.name        = 'verticalresponse'
-  spec.version     = '0.1.2'
+  spec.version     = '0.1.3'
   spec.date        = '2014-06-18'
   spec.summary     = "Gem used to connect to VerticalResponse.com's API "
   spec.description = "Gem used to connect to VerticalResponse.com's API "
-  spec.authors     = ["Cosmin Atanasiu", "Sridhar  Devulkar", "Esteban  Munoz"]
-  spec.email       = ["innorogue@gmail.com", "emunoz@verticalresponse.com", "sdevulkar@verticalresponse.com"]
+  spec.authors     = ["Sridhar  Devulkar", "Esteban  Munoz", "Cosmin Atanasiu"]
+  spec.email       = ["sdevulkar@verticalresponse.com", "emunoz@verticalresponse.com", "innorogue@gmail.com"]
   spec.extra_rdoc_files = [
     "LICENSE",
     "README.md"
