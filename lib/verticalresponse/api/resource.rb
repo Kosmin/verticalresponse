@@ -55,46 +55,56 @@ module VerticalResponse
           url.match(/#{ resource_name }\/(#{ id_regexp })/)[1]
         end
 
-        ##################################
-        # Common object oriented methods #
-        ##################################
+        ##################
+        # Common methods #
+        ##################
 
         # Returns a collection of current class objects.
         # Useful for when we need to have an object oriented way to
         # handle a list of items from an API response
-        def object_collection(response)
+        def object_collection(response, access_token = nil)
+          @access_token ||= access_token unless access_token.nil?
           response.handle_collection do |response_item|
-            self.new(response_item)
+            self.new(response_item, @access_token)
           end
         end
 
         # Returns all the objects of the current class
-        def all(options = {})
+        # The prefix is more or less a hack, to allow viewing contacts inside lists
+        # with one call
+        def all(options = {}, path_prefix = [])
+          @access_token ||= options[:access_token] unless options[:access_token].nil?
           validate_supported_method!(:all)
 
-          response = Response.new get(resource_uri, build_query_params(options))
+          uri = resource_uri_with_prefix(path_prefix)
+          response = Response.new(get(uri, build_query_params(options)), options[:access_token])
 
-          object_collection(response)
+          object_collection(response, options[:access_token])
         end
 
         # Find and return an object of the current class based on its ID
         def find(id, options = {})
+          @access_token ||= options[:access_token]
+          options.delete :access_token
+
           validate_supported_method!(:find)
+          response = Response.new(get(resource_uri_with_token(id),build_query_params(options)))
 
-          response = Response.new get(resource_uri(id), build_query_params(options))
-
-          self.new(response)
+          self.new(response, @access_token)
         end
 
         # Creates a new object of the current class with the parameters provided
-        def create(params)
+        def create(params, path_prefix = [])
+          @access_token ||= params[:access_token] unless params[:access_token].nil?
+          params.delete :access_token
+
           validate_supported_method!(:create)
 
-          response = Response.new post(
-            resource_uri,
-            build_params(params)
+          uri = resource_uri_with_prefix(path_prefix)
+          response = Response.new(
+            post(uri, build_params(params))
           )
-          self.new(response)
+          self.new(response, @access_token)
         end
       end
 
@@ -117,21 +127,29 @@ module VerticalResponse
       end
 
       def update(params)
+        @access_token ||= params[:access_token]
+        params.delete :access_token
         self.class.validate_supported_method!(:update)
 
-        response = Response.new self.class.put(
-          self.class.resource_uri(id),
-          self.class.build_params(params)
+        response = Response.new(
+          self.class.put(
+            self.class.resource_uri_with_token(id),
+            self.class.build_params(params)
+          )
         )
-        self.class.new(response)
+        self.class.new(response, @access_token)
       end
 
       def delete(params = {})
+        @access_token ||= params[:access_token]
+        params.delete :access_token
         self.class.validate_supported_method!(:delete)
 
-        Response.new self.class.delete(
-          self.class.resource_uri(id),
-          self.class.build_params(params)
+        Response.new(
+          self.class.delete(
+            self.class.resource_uri_with_token(id),
+            self.class.build_params(params)
+          )
         )
       end
 
@@ -145,7 +163,9 @@ module VerticalResponse
           uri = self.class.resource_uri(id, 'stats')
         end
 
-        Response.new self.class.get(uri, self.class.build_query_params(options))
+        Response.new(
+          self.class.get(uri, self.class.build_query_params(options))
+        )
       end
     end
   end

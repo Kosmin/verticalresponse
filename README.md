@@ -10,21 +10,47 @@ Based on https://github.com/VerticalResponse/v1wrappers/
 New Functionality
 -----------------
 
-Allows instantiating oauth clients by access_token, to access the VerticalResponse API in an object-oriented fashion.
+Allows instantiating oauth clients by access_token, to access the VerticalResponse API in an object-oriented fashion. The calls are object-oriented in the sense that you can instantate a client with its access_token. This is not possible with the original wrappers.
 
 ```ruby
-oauth_client = VerticalResponse::API::OAuth.new access_token
+client = VerticalResponse::API::OAuth.new access_token
+
+# Get all lists
+client.lists
+
+# Get a specific list
+client.find_list("<id>")
+
+# Get contacts in a specific list
+client.find_list("<id>").contacts
+
+# Create multiple contacts in a specific list
+client.find_list("<id>").create_contacts([{
+    email: "some@email.com",
+    first_name: "some first name",
+    last_name: "some last name",
+    custom: {
+      field: "some custom field"
+    }
+  },
+  {
+    email: "another@email.com",
+    first_name: "another first name",
+    last_name: "another last name",
+    custom: {
+      field: "another custom field"
+    }
+  }
+])
+
+# Get all contacts
+client.contacts
+
+# Get all custom fields
+client.custom_fields
 ```
 
-This allows us to get the lists for a verticalresponse user with
-```ruby
-oauth_client.lists
-```
-
-or the clients with
-```ruby
-oauth_client.clients
-```
+And a few other calls as well. Not all wrapper methods are supported, but you're more than welcome to implement them yourself and submit pull requests.
 
 Requirements
 ----------
@@ -36,4 +62,4 @@ Note: I only tested these requirements as much as I needed to (not for all funct
 
 Contribute
 ----------
-I only built this for what I needed, and I know it's pretty limited. Contributions are more than welcome
+The features of this gem were built as needed, and it is pretty limited. Contributions are more than welcome!

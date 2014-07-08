@@ -12,9 +12,8 @@ module VerticalResponse
   module API
     class CustomField < Resource
       class << self
-        # Base URI for the Message resource
-        def base_uri(*args)
-          @base_uri ||= File.join(super.to_s, 'custom_fields')
+        def resource_uri_suffix
+          ['custom_fields']
         end
 
         def id_regexp

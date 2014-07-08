@@ -12,9 +12,8 @@ module VerticalResponse
   module API
     class List < Resource
       class << self
-        # Base URI for the List resource
-        def base_uri(*args)
-          @base_uri ||= File.join(super.to_s, 'lists')
+        def resource_uri_suffix
+          ['lists']
         end
       end
 
@@ -26,27 +25,37 @@ module VerticalResponse
 
       # Returns all the messages targetted to the current list
       def messages(options = {})
-        @message_class.all(options)
+        @access_token ||= options[:access_token]
+        @message_class.all(options.merge(access_token: @access_token))
       end
 
       # Returns all the contacts that belong to the list
       def contacts(options = {})
-        @contact_class.all(options)
+        @access_token ||= options[:access_token]
+        @contact_class.all(options.merge(access_token: @access_token))
       end
 
       def find_contact(contact_id, options = {})
-        @contact_class.find(contact_id, options)
+        @access_token ||= options[:access_token]
+        @contact_class.find(contact_id, options.merge(access_token: @access_token))
+      end
+
+      def find_contact_by_email(email, options = {})
+        @access_token ||= options[:access_token]
+        @contact_class.find_by_email(options.merge(access_token: @access_token, email_address: email))
       end
 
       # Creates a contact for the list with the parameters provided
       def create_contact(params)
-        @contact_class.create(params)
+        @access_token ||= params[:access_token]
+        @contact_class.create(params.merge(access_token: @access_token))
       end
 
       # Creates contacts in batch for the list with the parameters provided
       def create_contacts(params)
+        @access_token ||= params[:access_token]
         params = { :contacts => params } if params.is_a?(Array)
-        @contact_class.create(params)
+        @contact_class.create(params.merge(access_token: @access_token))
       end
 
       # Deletes a contact from the list
@@ -57,7 +66,7 @@ module VerticalResponse
         contact_to_delete.delete
       end
 
-      # Deletes contacts in batch from the list
+      # Deletes contacts in batch from the lists
       def delete_contacts(contact_emails)
         Response.new @contact_class.delete(
           @contact_class.resource_uri,

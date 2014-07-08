@@ -13,9 +13,8 @@ module VerticalResponse
   module API
     class Email < Resource
       class << self
-        # Base URI for the Email resource
-        def base_uri(*args)
-          @base_uri ||= File.join(super.to_s, 'messages', 'emails')
+        def resource_uri_suffix
+          ['messages', 'emails']
         end
 
         # Overwrite from parent class since it's a special type of

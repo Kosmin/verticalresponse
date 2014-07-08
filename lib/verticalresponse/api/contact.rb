@@ -13,13 +13,22 @@ module VerticalResponse
   module API
     class Contact < Resource
       class << self
-        # Base URI for the Contact resource
-        def base_uri(*args)
-          @base_uri ||= File.join(super.to_s, 'contacts')
+        def resource_uri_suffix
+          ['contacts']
         end
 
         def fields(options = {})
           Response.new get(resource_uri('fields'), build_query_params(options))
+        end
+
+        def find_by_email(options = {})
+          options.delete :access_token
+          @access_token ||= options[:access_token]
+
+          validate_supported_method!(:find)
+          response = Response.new(get(resource_uri_with_token,build_query_params(options)))
+
+          object_collection(response)
         end
       end
 
@@ -31,13 +40,16 @@ module VerticalResponse
 
       # Returns all the lists this contact belongs to
       def lists(options = {})
+        options.merge!(access_token: @access_token)
         @list_class.all(options)
       end
 
       # Returns all the messages targetted to the current contact
       def messages(options = {})
+        options.merge!(access_token: @access_token)
         @message_class.all(options)
       end
     end
+
   end
 end

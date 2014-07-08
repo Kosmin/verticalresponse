@@ -6,9 +6,10 @@ require_relative 'error'
 module VerticalResponse
   module API
     class Response
-      attr_reader :url, :items, :attributes, :links, :success, :error, :raw_response
+      attr_reader :url, :items, :attributes, :links, :success, :error,
+                  :raw_response, :access_token
 
-      def initialize(response)
+      def initialize(response, access_token = nil)
         @url =          response['url']
         @items =        response['items']
         @attributes =   response['attributes']
@@ -17,6 +18,8 @@ module VerticalResponse
         @error =        response['error']
         @raw_response = response
 
+        @access_token ||= access_token unless access_token.nil?
+
         handle_error unless success?
       end
 
@@ -24,7 +27,7 @@ module VerticalResponse
       # for each one of them
       def handle_collection
         items.map do |item|
-          yield(Response.new(item))
+          yield(Response.new(item, @access_token))
         end
       end
 

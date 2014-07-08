@@ -14,8 +14,8 @@ module VerticalResponse
     class Message < Resource
       class << self
         # Base URI for the Message resource
-        def base_uri(*args)
-          @base_uri ||= File.join(super.to_s, 'messages')
+        def resource_uri_suffix
+          ['messages']
         end
 
         # Overwritting this method from the parent class since we want to

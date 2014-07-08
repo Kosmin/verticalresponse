@@ -13,9 +13,8 @@ module VerticalResponse
   module API
     class SocialPost < Resource
       class << self
-        # Base URI for the Email resource
-        def base_uri(*args)
-          @base_uri ||= File.join(super.to_s, 'messages', 'social_posts')
+        def resource_uri_suffix
+          ['messages', 'social_posts']
         end
 
         # Overwrite from parent class since it's a special type of
