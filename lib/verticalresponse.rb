@@ -14,7 +14,7 @@ require_relative 'verticalresponse/api/response.rb'
 require_relative 'verticalresponse/api/social_post.rb'
 
 module VerticalResponse
-  API_VERSION  = "v1".freeze
+  API_VERSION  = "v1"
 
   CONFIG = { 
     host: 'vrapi.verticalresponse.com',
