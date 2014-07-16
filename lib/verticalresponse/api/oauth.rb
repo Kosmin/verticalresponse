@@ -27,7 +27,7 @@ module VerticalResponse
         end
 
         # client_id is the application key
-        def authorize(redirect_uri = "", client_id = "")
+        def authorize(client_id = "", redirect_uri = "")
           get(
             resource_uri('authorize'),
             build_query_params({ :client_id => client_id, :redirect_uri => redirect_uri })

@@ -21,7 +21,7 @@ module VerticalResponse
 
         # Assign the headers required by our partner Mashery
         def assign_headers(headers_info = {})
-          access_token = @access_token || headers_info[:access_token]
+          access_token = headers_info[:access_token]
           add_default_query_param(:access_token, access_token) unless access_token.nil?
         end
 
@@ -129,13 +129,13 @@ module VerticalResponse
             end
             uri = File.join(uri, *additional_paths)
           end
-          uri + "?access_token=#{@access_token}"
+          uri
         end
 
         # Used when posting
         # The access_token at this time seems to only work as GET parameter
-        def resource_uri_with_token(*additional_paths)
-          resource_uri(*additional_paths) + "?access_token=#{@access_token}"
+        def resource_uri_with_token(access_token, *additional_paths)
+          resource_uri(*additional_paths) + "?access_token=#{access_token}"
         end
       end
 
@@ -145,7 +145,7 @@ module VerticalResponse
       attr_accessor :response
 
       def initialize(response, access_token = nil)
-        @access_token ||= access_token unless access_token.nil?
+        @access_token = access_token
         self.response = response
       end
     end

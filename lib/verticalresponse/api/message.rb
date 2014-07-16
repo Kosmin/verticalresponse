@@ -31,7 +31,7 @@ module VerticalResponse
                 message_class = SocialPost
               end
             end
-            message_class.new(response_item)
+            message_class.new(response_item, access_token)
           end
         end
       end

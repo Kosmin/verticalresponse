@@ -63,9 +63,8 @@ module VerticalResponse
         # Useful for when we need to have an object oriented way to
         # handle a list of items from an API response
         def object_collection(response, access_token = nil)
-          @access_token ||= access_token unless access_token.nil?
           response.handle_collection do |response_item|
-            self.new(response_item, @access_token)
+            self.new(response_item, access_token)
           end
         end
 
@@ -73,7 +72,6 @@ module VerticalResponse
         # The prefix is more or less a hack, to allow viewing contacts inside lists
         # with one call
         def all(options = {}, path_prefix = [])
-          @access_token ||= options[:access_token] unless options[:access_token].nil?
           validate_supported_method!(:all)
 
           uri = resource_uri_with_prefix(path_prefix)
@@ -84,27 +82,29 @@ module VerticalResponse
 
         # Find and return an object of the current class based on its ID
         def find(id, options = {})
-          @access_token ||= options[:access_token]
-          options.delete :access_token
-
           validate_supported_method!(:find)
-          response = Response.new(get(resource_uri_with_token(id),build_query_params(options)))
+          response = Response.new(get(resource_uri(id),build_query_params(options)))
 
-          self.new(response, @access_token)
+          self.new(response, options[:access_token])
         end
 
         # Creates a new object of the current class with the parameters provided
         def create(params, path_prefix = [])
-          @access_token ||= params[:access_token] unless params[:access_token].nil?
+          access_token = params[:access_token]
           params.delete :access_token
 
           validate_supported_method!(:create)
 
           uri = resource_uri_with_prefix(path_prefix)
+
+          # VerticalResponse doesn't like it when we pass the access_token via POST
+          uri += (uri.include? "?") ? "&" : "?"
+          uri += "access_token=#{access_token}"
+
           response = Response.new(
             post(uri, build_params(params))
           )
-          self.new(response, @access_token)
+          self.new(response, access_token)
         end
       end
 
@@ -127,13 +127,13 @@ module VerticalResponse
       end
 
       def update(params)
-        @access_token ||= params[:access_token]
+        @access_token = params[:access_token]
         params.delete :access_token
         self.class.validate_supported_method!(:update)
 
         response = Response.new(
           self.class.put(
-            self.class.resource_uri_with_token(id),
+            self.class.resource_uri_with_token(@access_token, id),
             self.class.build_params(params)
           )
         )
@@ -141,13 +141,13 @@ module VerticalResponse
       end
 
       def delete(params = {})
-        @access_token ||= params[:access_token]
+        @access_token = params[:access_token]
         params.delete :access_token
         self.class.validate_supported_method!(:delete)
 
         Response.new(
           self.class.delete(
-            self.class.resource_uri_with_token(id),
+            self.class.resource_uri_with_token(@access_token, id),
             self.class.build_params(params)
           )
         )

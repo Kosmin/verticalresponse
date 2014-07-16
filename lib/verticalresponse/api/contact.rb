@@ -18,17 +18,14 @@ module VerticalResponse
         end
 
         def fields(options = {})
-          Response.new get(resource_uri('fields'), build_query_params(options))
+          Response.new get(resource_uri('fields'), build_query_params(options), options[:access_token])
         end
 
         def find_by_email(options = {})
-          options.delete :access_token
-          @access_token ||= options[:access_token]
-
           validate_supported_method!(:find)
-          response = Response.new(get(resource_uri_with_token,build_query_params(options)))
+          response = Response.new(get(resource_uri,build_query_params(options)), options[:access_token])
 
-          object_collection(response)
+          object_collection(response, options[:access_token])
         end
       end
 

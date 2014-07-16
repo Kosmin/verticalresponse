@@ -18,7 +18,7 @@ module VerticalResponse
         @error =        response['error']
         @raw_response = response
 
-        @access_token ||= access_token unless access_token.nil?
+        @access_token = access_token
 
         handle_error unless success?
       end
