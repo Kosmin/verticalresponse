@@ -108,6 +108,21 @@ module VerticalResponse
         params.merge!({access_token: @access_token})
         VerticalResponse::API::CustomField.all(params)
       end
+
+      def fields(params = {}) #optional "type: 'all' or 'standard'~>(default)"
+        params[:access_token] = @access_token
+        VerticalResponse::API::Contact.fields(params)
+      end
+
+      def create_webhook(params = {})
+        params[:access_token] = @access_token
+        VerticalResponse::API::Webhook.create_hook(params)
+      end
+
+      def user_info(params = {})
+        params[:access_token] = @access_token
+        VerticalResponse::API::User.info(params)
+      end
     end
   end
 end

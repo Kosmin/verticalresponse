@@ -16,7 +16,7 @@
 
 Gem::Specification.new do |spec|
   spec.name        = 'verticalresponse'
-  spec.version     = '0.1.6'
+  spec.version     = '0.1.7'
   spec.date        = '2014-06-18'
   spec.summary     = "Gem used to connect to VerticalResponse.com's API "
   spec.description = "Gem used to connect to VerticalResponse.com's API "
