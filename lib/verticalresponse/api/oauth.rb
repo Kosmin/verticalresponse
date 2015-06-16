@@ -108,6 +108,12 @@ module VerticalResponse
         params.merge!({access_token: @access_token})
         VerticalResponse::API::CustomField.all(params)
       end
+
+      def fields(params = {}) #optional "type: 'all' or 'standard'~>(default)"
+        params.merge!({access_token: @access_token})
+        VerticalResponse::API::Contact.fields(params)
+      end
+
     end
   end
 end
