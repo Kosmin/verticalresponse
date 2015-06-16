@@ -18,7 +18,7 @@ module VerticalResponse
         end
 
         def fields(options = {})
-          Response.new get(resource_uri('fields'), build_query_params(options), options[:access_token])
+          Response.new(get(resource_uri('fields'), build_query_params(options)), options[:access_token])
         end
 
         def find_by_email(options = {})
