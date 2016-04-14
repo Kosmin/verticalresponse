@@ -21,10 +21,21 @@ module VerticalResponse
           super
         end
 
+        def list_hooks(options = {})
+          auth = "Bearer " + options[:access_token]
+          Response.new(HTTParty.get(resource_uri, :headers => { "Authorization" => auth}))
+        end
+
         def create_hook(options = {})
           params = build_params(options.except(:access_token).to_json, options.slice(:access_token))
           params.merge!(headers: {"Content-Type"=>"application/json"})
           Response.new(post(resource_uri, params), options[:access_token])
+        end
+
+        def delete_hook(options = {})
+          auth = "Bearer " + options[:access_token]
+          url = "#{resource_uri}/#{options[:id]}"
+          Response.new(HTTParty.delete(url, :headers => { "Authorization" => auth}))
         end
       end
     end

@@ -119,6 +119,16 @@ module VerticalResponse
         VerticalResponse::API::Webhook.create_hook(params)
       end
 
+      def webhooks(params = {})
+        params[:access_token] = @access_token
+        VerticalResponse::API::Webhook.list_hooks(params)
+      end
+
+      def delete_webhook(params = {})
+        params[:access_token] = @access_token
+        VerticalResponse::API::Webhook.delete_hook(params)
+      end
+
       def user_info(params = {})
         params[:access_token] = @access_token
         VerticalResponse::API::User.info(params)
