@@ -1,3 +1,7 @@
+## No Longer Supported
+
+I'm no longer maintaining this repo. For a more up-to-date version, please check: https://github.com/wishpond-dev/verticalresponse
+
 VerticalResponse
 ================
 
